@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useReducer, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import { productList } from "./json/productJson";
+// import axios from "axios";
+
+import "./App.css";
+import {
+  productListReducer,
+  initialState,
+} from "./reducers/ProductListReducers";
+
+const TilesContainer = React.lazy(() =>
+  import("./Components/add-component-tiles/TilesContainer")
+);
+
+const AddComponent = React.lazy(() =>
+  import("./Components/add-components-page/AddComponent")
+);
+
+const Header = React.lazy(() => import("./Components/header/Header"));
 
 function App() {
+  const [state, dispatch] = useReducer(productListReducer, initialState);
+
+  useEffect(() => {
+    async function getproductData() {
+      Promise.resolve(productList).then((res) =>
+        dispatch({ type: "FETCH_PRODUCTS", data: res })
+      );
+    }
+
+    setTimeout(getproductData, 500);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <div className="flex-container main">
+        <TilesContainer products={state} handleProductSelect={dispatch} />
+        <AddComponent products={state} handleProductSelect={dispatch} />
+      </div>
     </div>
   );
 }
