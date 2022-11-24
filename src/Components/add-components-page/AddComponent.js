@@ -28,6 +28,19 @@ const AddComponent = (props) => {
     ]);
   }
 
+  //api was not there so just mocking the behavior
+  const handleSubmitToApi = async () => {
+    setVisible(false);
+    if (!products?.selectedProduct?.some((data) => data.id !== null)) {
+      alert("please slect atleast one Item");
+      return;
+    } else {
+      setTimeout(() => {
+        alert("Query successfully submitted");
+      }, 1000);
+    }
+  };
+
   const debouncedInputHandler = debouncedInput(handleInputChange, 1000);
 
   const handleOnClickProduct = (data) => {
@@ -89,7 +102,11 @@ const AddComponent = (props) => {
               ))}
           </ul>
         )}
-        <Button variant="primary" className="form-width mt20">
+        <Button
+          variant="primary"
+          className="form-width mt20"
+          onClick={handleSubmitToApi}
+        >
           Next
         </Button>
       </Form.Group>
